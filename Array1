@@ -1,0 +1,296 @@
+<?php
+
+/**
+ * TODO: дописать реализацию
+ * ВАЖНО: Дописать объявление функций в соответсвии с DOC-блоками
+ * см: https://ru.wikipedia.org/wiki/PHPDoc
+ *     https://github.com/phpDocumentor/fig-standards/blob/master/proposed/phpdoc.md
+ * implements \IteratorAggregate, \Countable
+ */
+class ArrayContainer {
+
+    /** @var array $items */
+    protected $items;
+
+    /**
+     * TODO: описать конструктор который сохраняет $items в $this->items
+     * 
+     * @param array $items
+     * 
+     * @return ArrayContainer
+     */
+    public function __construct($items =[] )
+    {
+        $this->items = $items;
+        return $items;
+    }
+
+    /**
+     * TODO: реализовать создание контейнера через ArrayContainer::new()
+     * 
+     * @param array $items
+     * 
+     * @return ArrayContainer
+     */
+    function newArr ($item = [])
+    {
+        return new self($item);
+    }
+
+
+    /**
+     * TODO: вернуть все элементы
+     * 
+     * @return array|null
+     */
+    public function all()
+    {   echo '<br> RETURN ALL <br>';
+        if ($this->items) 
+        {
+        print_r($this->items);
+        return $this->items;
+        }
+        print_r($this->items);
+        return NULL;
+    }
+
+    /**
+     * TODO: вернуть только ключи массива $items
+     * 
+     * @return array
+     */
+    public function keys()
+    {
+        $keys = array_keys($this->items);
+        echo "<br>RETURN ONLY MASSIVE OF KEYS<br>";
+        print_r($keys);
+        return  $keys;
+    }
+
+    /**
+     * TODO: вернуть только значения массива $items
+     * 
+     * @return array
+     */
+    public function values()
+    {
+        $arrayOfValue = [];
+        if ($this->items) 
+        {
+        echo "<br>RETURN VALUES<br>";
+        $arrayOfValue = array_values($this->items);
+        print_r($arrayOfValue);
+        return $arrayOfValue;
+        }
+        echo "<br>RETURN VALUES - NULL<br>";
+        print_r($arrayOfValue);
+        return NULL;
+    }
+
+    /**
+     * ВАЖНО: в функциях has(), get() и set() параметр $keystring является строкой и может быть описан в виде цепочки ключей
+     * Т.е. по пути $keystring = 'first_key.second_key.third_key'
+     * обращение происходит к элементу:
+     * $this->items['first_key']['second_key']]'third_key']
+     */
+
+    /**
+     * TODO: вернуть TRUE если ключ существует, иначе FALSE
+     * 
+     * @param string $keystring
+     * 
+     * @return bool
+     */
+    
+    public function has($keystring)
+    {   
+       echo '<br> KEY = '.$keystring.'  IS EXIST?';
+       $keys = explode('.', $keystring);
+       $count = count($keys);
+       $objArr = $this ->items;
+       for ($i = 0; $i<($count-1); $i++)
+       {   
+           $currentKey = $keys[$i];
+           if (array_key_exists($currentKey, $objArr))
+           {
+           $objArr = $objArr[$currentKey];
+           }
+           else {echo "<br>INCORRECT WAY - $currentKey<br>";}
+       }
+       $resolve = array_key_exists(array_pop($keys), $objArr);
+       var_dump($resolve);
+       return $resolve;
+    }
+
+
+    /**
+     * TODO: вернуть значение если ключ существует, иначе $default
+     * 
+     * @param string $keystring
+     * @param $default = null
+     * 
+     * @return mixed|null
+     */
+    public function get($keystring)
+    {   
+     if (ArrayContainer::has($keystring)) 
+      { 
+       $objArr = $this->items;
+       $keys = explode('.', $keystring);
+       $count = count($keys);
+       for ($i = 0; $i<$count; $i++)
+       {   
+           $currentKey = $keys[$i];
+           $objArr = $objArr[$currentKey];
+       }
+            echo '<br>IN '.$currentKey. ' CONTAINED '.$objArr.'<br>';
+            return $objArr;
+     }
+    }
+
+    /**
+     * TODO: добавить в $tems значение $value по пути $keystring
+     * 
+     * @param string $keystring
+     * @param $value = null
+     * 
+     * @return ArrayContainer
+     */
+    public function set($keystring, $value = null)
+    {  
+       echo '<br>SET - '.$value.' IN '.$keystring.'<br>';
+       $keys = explode('.', $keystring);
+       $count = count($keys);
+       $objArr = $this->items;
+       
+       for ($i=0; $i<$count; $i++) {
+           $objArr = $objArr[$keys[$i]];
+       }
+       
+        print_r ($objArr);
+        echo '<br>';
+        print_r ($this->items);
+       
+    
+    }
+     /**
+     * TODO: Добавить несколько значений из массива вида
+     * [
+     *      $keystring => $value,
+     *      ...
+     * ]
+     * 
+     * @param array $items = []
+     * 
+     * @return ArrayContainer
+     */
+    public function insert($items = [])
+    {
+        
+    }
+
+
+    /**
+     * TODO: реализовать по документации IteratorAggregate
+     * 
+     * @return ArrayIterator
+     */
+    public function getIterator()
+    {
+    }
+    
+    /**
+     * TODO: реализовать по документации Countable
+     * 
+     * @return integer
+     */
+    public function count()
+    {
+    }
+}
+
+$flowers = array( array("rose", 100 , 15),
+                  array("someone", 60 , 25),
+                  array("anothers", 180 , 7) 
+                ); 
+
+$dogs = array('name' => 'Hovan', 'age' => 28 , 'healh' => 'AlmostDie');
+
+$food = array (
+  'food' => array (
+          'apple' => array 
+               (
+               'price' => 17,
+               'kkal' => 88,
+               'color' => 'green',
+               ),
+          'pineapple' => array 
+               (
+               'price' => 19,
+               'kkal' => 844,
+               'color' => 'orange',
+               ),
+          'pineapplepen' => array 
+               (
+               'price' => 139,
+               'kkal' => 8434,
+               'color' => '???',
+               )
+  )   ,
+    
+  'Doublefood' => array (
+          'apple' => array 
+               (
+               'price' => 17,
+               'kkal' => 88,
+               'color' => 'green',
+               ),
+          'pineapple' => array 
+               (
+               'price' => 19,
+               'kkal' => 844,
+               'color' => 'orange',
+               ),
+          'pineapplepen' => array 
+               (
+               'price' => 139,
+               'kkal' => 8434,
+               'color' => '???',
+               )
+  )   
+);
+
+echo '<b>TEST BLOCK FLOWERS</b>';
+$testArrFl = new ArrayContainer($flowers);
+
+$testArrFl -> values();
+$testArrFl -> keys();
+$testArrFl -> all();
+$testArrFl  -> has('rose');
+
+echo '<br>';
+echo '<b>TEST BLOCK DOGS</b>';
+$testArrDogs = new ArrayContainer($dogs);
+
+$testArrDogs -> values();
+$testArrDogs -> keys();
+$testArrDogs -> all();
+$testArrDogs  -> has('name');
+
+
+echo '<br>';
+echo '<b>TEST BLOCK FOOD</b>';
+$testArrfood = new ArrayContainer($food);
+
+$testArrfood -> values();
+$testArrfood  -> keys();
+$testArrfood  -> all();
+$testArrfood  -> has('food.apple');
+$testArrfood  -> has('food.apple.kkal');
+$testArrfood  -> has('food.appled.kkal');
+$testArrfood  -> get('food.apple');
+$testArrfood  -> get('food.apple.kkal');
+$testArrfood  -> get('food.appled.kkal');
+$testArrfood  -> set('food.apple.kkal',1007700);
+$testArrfood  -> get('food.apple.kkal');
+//$testArr2 = ArrayContainer::newArr($flowers);
