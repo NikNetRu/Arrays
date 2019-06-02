@@ -156,22 +156,23 @@ class ArrayContainer {
      * 
      * @return ArrayContainer
      */
-    public function set($keystring, $value = null)
+    ublic function set($keystring, $value = null)
     {  
        echo '<br>SET - '.$value.' IN '.$keystring.'<br>';
        $keys = explode('.', $keystring);
-       $count = count($keys);
-       $objArr = $this->items;
-       
-       for ($i=0; $i<$count; $i++) {
-           $objArr = $objArr[$keys[$i]];
-       }
-       
-        print_r ($objArr);
+       $array = $this->items;
+       function set_value($keys, &$array, $value)
+            {
+            if(count($keys) > 1){
+             set_value(array_slice($keys, 1), $array[$keys[0]], $value);
+             }else{
+            $array[$keys[0]] = $value;
+             }
+            }  
+        set_value($keys, $this->items, $value);
+        print_r ($array);
         echo '<br>';
         print_r ($this->items);
-       
-    
     }
      /**
      * TODO: Добавить несколько значений из массива вида
