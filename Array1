@@ -1,5 +1,4 @@
 <?php
-
 /**
  * TODO: дописать реализацию
  * ВАЖНО: Дописать объявление функций в соответсвии с DOC-блоками
@@ -7,7 +6,7 @@
  *     https://github.com/phpDocumentor/fig-standards/blob/master/proposed/phpdoc.md
  * implements \IteratorAggregate, \Countable
  */
-class ArrayContainer {
+    class ArrayContainer implements IteratorAggregate, Countable {
 
     /** @var array $items */
     protected $items;
@@ -156,7 +155,7 @@ class ArrayContainer {
      * 
      * @return ArrayContainer
      */
-    ublic function set($keystring, $value = null)
+    public function set($keystring, $value = null)
     {  
        echo '<br>SET - '.$value.' IN '.$keystring.'<br>';
        $keys = explode('.', $keystring);
@@ -184,10 +183,15 @@ class ArrayContainer {
      * @param array $items = []
      * 
      * @return ArrayContainer
+      * Не удаётся реализовать чеез ArrayContainer::set();
+      * Из за рекурсии крашится - "Connot redeclare function..."
      */
     public function insert($items = [])
-    {
-        
+    {  
+        foreach ($items as $key => $value)
+        {
+        ArrayContainer::set((string) $key, $value);
+        }
     }
 
 
@@ -196,8 +200,9 @@ class ArrayContainer {
      * 
      * @return ArrayIterator
      */
-    public function getIterator()
+     public function getIterator()
     {
+         return new ArrayIterator($this->items);
     }
     
     /**
@@ -207,7 +212,10 @@ class ArrayContainer {
      */
     public function count()
     {
+        return $this->items;
     }
+
+
 }
 
 $flowers = array( array("rose", 100 , 15),
@@ -216,7 +224,7 @@ $flowers = array( array("rose", 100 , 15),
                 ); 
 
 $dogs = array('name' => 'Hovan', 'age' => 28 , 'healh' => 'AlmostDie');
-
+$decimal = array (123,2,3,3);
 $food = array (
   'food' => array (
           'apple' => array 
@@ -295,3 +303,17 @@ $testArrfood  -> get('food.appled.kkal');
 $testArrfood  -> set('food.apple.kkal',1007700);
 $testArrfood  -> get('food.apple.kkal');
 //$testArr2 = ArrayContainer::newArr($flowers);
+$testArrfood  -> insert(array ('Doublefood.pineapplepen.color'=>'red','Doublefood.pineapplepen.price'=>200)); //******!!!
+$testArrfood  -> get('Doublefood.pineapplepen.color');
+$testArrfood  -> get('Doublefood.pineapplepen.price');
+echo '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!';
+foreach ( $testArrfood as $key => $value ) {
+        var_dump($key, $value);
+        echo 'Element </br>';
+}
+$testdec = new ArrayContainer($decimal);
+$testdec->newArr('23');
+$testdec->newArr('23','718.dd');
+echo '</br>!!!!!!!!!!!!!!!CHECK COUNTABLE!!!!!!!!!!!!!!!</br>';
+//echo count($testArrfood);
+echo count($testdec);
